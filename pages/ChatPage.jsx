@@ -14,9 +14,9 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const ChatPage = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const [messages, setMessages] = useState<{id: number, text: string}[]>([]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef(null);
 
   const handleSend = () => {
     if (input.trim().length === 0) return;
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    marginBottom: 56, // move above the bottom bar (height of navBar)
   },
   input: {
     flex: 1,
