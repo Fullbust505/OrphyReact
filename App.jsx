@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -21,10 +21,22 @@ import ChatPage from './pages/ChatPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import EmptyPage from './pages/EmptyPage.jsx';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [currentTab, setCurrentTab] = useState('chats');
+import { getAuth, signInAnonymously } from '@react-native-firebase/auth';
 
+
+function App() {
+
+  signInAnonymously(getAuth())
+    .then(() => {
+      console.log('User signed in anonymously');
+    })
+    .catch(error => {
+      if (error.code === 'auth/operation-not-allowed') {
+        console.log('Enable anonymous in your firebase console.');
+      }
+
+      console.error(error);
+    });
   const backgroundStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
