@@ -5,7 +5,9 @@
  * @format
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import { getAuth, signInAnonymously } from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app';
 import {
   StatusBar,
   StyleSheet,
@@ -25,6 +27,21 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [currentTab, setCurrentTab] = useState('chats');
 
+  /* AUTH HOOK */
+  useEffect(() => {
+    const userLoginAnon = async () => {
+      try {
+        const auth = getAuth();
+        const userInfo = await signInAnonymously(auth);
+        console.log("my uid : ", userInfo.user.uid);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    userLoginAnon();
+  }, []);
+
+  
   const backgroundStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

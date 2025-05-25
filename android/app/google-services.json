@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "232822367180",
+    "firebase_url": "https://orphy-p2-2025-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "orphy-p2-2025",
+    "storage_bucket": "orphy-p2-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232822367180:android:d5f4ac5adf93df1000f369",
+        "android_client_info": {
+          "package_name": "com.fullbust.orphy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232822367180-ivfpdsrlktg1d7cputrlj24709kng43v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fullbust.orphy",
+            "certificate_hash": "dc360935f221c9947dd27751b8f86224469eacdc"
+          }
+        },
+        {
+          "client_id": "232822367180-37ia62hsj9gh8l471q1u6030cnncldco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpGWDmEDSSElhMjg2JTbbZVS2XOqvs-mQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232822367180-37ia62hsj9gh8l471q1u6030cnncldco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
