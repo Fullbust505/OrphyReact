@@ -1,4 +1,4 @@
-package com.orphyreact2
+package com.fullbust.orphy
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
