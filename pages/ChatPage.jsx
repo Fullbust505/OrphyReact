@@ -12,10 +12,31 @@ import {
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-const ChatPage = () => {
+const iceBreakers = [
+  "Aujourd’hui, j’ai réussi à...",
+  "En un mot, comment tu te sens en ce moment ?",
+  "Si ton humeur était une météo, ce serait quoi ?",
+  "Qu’est-ce qui t’a fait sourire récemment ?",
+  "Une chose que j’aimerais que les gens comprennent sur moi...",
+  "Ce que je fais quand ça ne va pas trop bien, c’est...",
+  "Quelle chanson décrit bien ton humeur cette semaine ?",
+  "Complète la phrase : je me sens le plus moi-même quand…"
+];
+
+function getDeterministicIceBreaker(groupId) {
+  // Simple hash: sum char codes
+  let hash = 0;
+  for (let i = 0; i < groupId.length; i++) {
+    hash = (hash + groupId.charCodeAt(i)) % iceBreakers.length;
+  }
+  return iceBreakers[hash];
+}
+
+const ChatPage = ({ groupId = "default-group" }) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const iceBreaker = getDeterministicIceBreaker(groupId);
   const scrollViewRef = useRef(null);
 
   const handleSend = () => {
@@ -36,6 +57,17 @@ const ChatPage = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={80}
     >
+      <View style={[
+        styles.icebreakerContainer,
+        {backgroundColor: isDarkMode ? '#263238' : '#e0f7fa'}
+      ]}>
+        <Text style={[
+          styles.icebreakerText,
+          {color: isDarkMode ? '#b2ebf2' : '#00796b'}
+        ]}>
+          💬 Ice Breaker : {iceBreaker}
+        </Text>
+      </View>
       <ScrollView
         style={styles.messagesContainer}
         contentContainerStyle={{padding: 16, paddingBottom: 80}}
@@ -67,6 +99,15 @@ const ChatPage = () => {
 };
 
 const styles = StyleSheet.create({
+  icebreakerContainer: {
+    padding: 15,
+    borderRadius: 10,
+    margin: 16,
+    marginBottom: 0,
+  },
+  icebreakerText: {
+    fontSize: 18,
+  },
   messagesContainer: {
     flex: 1,
   },
