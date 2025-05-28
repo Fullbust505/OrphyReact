@@ -23,20 +23,28 @@ const iceBreakers = [
   "Complète la phrase : je me sens le plus moi-même quand…"
 ];
 
-function getDeterministicIceBreaker(groupId) {
-  // Simple hash: sum char codes
+// Deterministic "random" selection based on groupId and current 2-minute window
+function getRandomIceBreaker(groupId) {
+  const now = Date.now();
+  const minutes2 = 2 * 60 * 1000;
+  const window = Math.floor(now / minutes2);
+
+  // Create a simple hash from groupId and window
   let hash = 0;
-  for (let i = 0; i < groupId.length; i++) {
-    hash = (hash + groupId.charCodeAt(i)) % iceBreakers.length;
+  const str = groupId + window;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
   }
-  return iceBreakers[hash];
+  const idx = Math.abs(hash) % iceBreakers.length;
+  return iceBreakers[idx];
 }
 
 const ChatPage = ({ groupId = "default-group" }) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const iceBreaker = getDeterministicIceBreaker(groupId);
+  const iceBreaker = getRandomIceBreaker(groupId);
   const scrollViewRef = useRef(null);
 
   const handleSend = () => {
