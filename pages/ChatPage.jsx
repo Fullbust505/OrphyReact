@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -20,32 +20,40 @@ const iceBreakers = [
   "Une chose que j’aimerais que les gens comprennent sur moi...",
   "Ce que je fais quand ça ne va pas trop bien, c’est...",
   "Quelle chanson décrit bien ton humeur cette semaine ?",
-  "Complète la phrase : je me sens le plus moi-même quand…"
+  "Complète la phrase : je me sens le plus moi-même quand…",
+  "Si tu avais un superpouvoir pour une journée, ce serait quoi et pourquoi ?",
+  "Ton mood actuel en un emoji ?",
+  "Si tu étais un personnage de film ou série, tu serais qui ?",
+  "Plutôt team nuit blanche ou réveil à 6h ?",
+  "Quelle chanson décrit ton état d’esprit aujourd’hui ?",
+  "Quel est ton pet peeve (truc qui t’énerve sans raison valable) ?",
+  "Si tu pouvais dire une vérité à tout le monde sans conséquence, ce serait quoi ?",
+  "Tu reçois 1000€ maintenant, mais tu dois le dépenser en 1h. Tu fais quoi ?",
+  "T’es bloqué dans un ascenseur avec une célébrité… qui tu choisis ?",
+  "T’as un mot à dire au monde entier, une seule fois. Qu’est-ce que tu dis ?",
+  "Partage un rêve chelou que t’as fait récemment.",
+  "Une peur irrationnelle que t’as (ou que t’avais enfant) ?",
+  "Termine la phrase : ‘Personne ne le sait, mais…’"
 ];
 
-// Deterministic "random" selection based on groupId and current 2-minute window
-function getRandomIceBreaker(groupId) {
-  const now = Date.now();
-  const minutes2 = 2 * 60 * 1000;
-  const window = Math.floor(now / minutes2);
-
-  // Create a simple hash from groupId and window
-  let hash = 0;
-  const str = groupId + window;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0; // Convert to 32bit integer
-  }
-  const idx = Math.abs(hash) % iceBreakers.length;
-  return iceBreakers[idx];
+function getRandomIndex(length) {
+  return Math.floor(Math.random() * length);
 }
 
 const ChatPage = ({ groupId = "default-group" }) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const iceBreaker = getRandomIceBreaker(groupId);
+  const [iceBreaker, setIceBreaker] = useState(() => iceBreakers[getRandomIndex(iceBreakers.length)]);
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    // Set a new random ice breaker every minute
+    const interval = setInterval(() => {
+      setIceBreaker(iceBreakers[getRandomIndex(iceBreakers.length)]);
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSend = () => {
     if (input.trim().length === 0) return;
