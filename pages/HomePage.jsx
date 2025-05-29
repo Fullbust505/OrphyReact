@@ -9,15 +9,13 @@ import {
   ImageBackground,
 } from 'react-native';
 import Colorsorphy from '../colors.js';
-import EmptyPage from './NewChatPage.jsx';
-import ChatPage from './ChatPage.jsx';
+import NewChatPage from './NewChatPage.jsx';
 
 const HomePage = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [currentTab, setCurrentTab] = useState('home');
-
-  if (currentTab === 'group1') return <EmptyPage />;
-  if (currentTab === 'group2') return <ChatPage />;
+  
+  if (currentTab === 'chats') return <NewChatPage/>;
 
   return (
     <View style={styles.container}>
@@ -39,11 +37,8 @@ const HomePage = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.groupList}>
-        <TouchableOpacity style={styles.buttons} onPress={() => setCurrentTab('group1')}>
-          <Text style={styles.buttonText}>Group name 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonsClosed} onPress={() => setCurrentTab('group2')}>
-          <Text style={styles.buttonText}>Group name 2</Text>
+        <TouchableOpacity style={styles.buttons} onPress={() => setCurrentTab('chats')}>
+          <Text style={styles.buttonText}>Go to chat</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -113,17 +108,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colorsorphy.option_button_lightY,
-  },
-  buttonsClosed: {
-    width: 200,
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 80,
-    elevation: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colorsorphy.option_button_brown,
   },
 });
 

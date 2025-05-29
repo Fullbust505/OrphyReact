@@ -7,7 +7,6 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Modal,
   Image
 } from 'react-native';
 
@@ -15,14 +14,12 @@ import { database, set, ref } from './firebase';
 import auth from '@react-native-firebase/auth';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import ChatPage from './pages/ChatPage.jsx';
+import NewChatPage from './pages/NewChatPage.jsx';
 import NewProfilePage from './pages/NewProfilePage.jsx';
 import Colorsorphy from './colors.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HomePage from './pages/HomePage.jsx';
 
-import ProfilePage from './pages/Profile/ProfilePage.jsx';
-import EmptyPage from './pages/NewChatPage.jsx';
 import Welcome from './pages/Onboarding/Welcome.jsx';
 import Form from './pages/Onboarding/Form.jsx';
 import Contacts from './pages/Contacts.jsx';
@@ -86,15 +83,13 @@ function App() {
   }, []);
 
   const renderScreen = () => {
-    if (currentTab === 'chats') return <ChatPage />;
-    if (currentTab === 'profile') return <ProfilePage goToForm={() => setCurrentTab('form')} />;
+    if (currentTab === 'chats') return <NewChatPage goToHome={() => setCurrentTab('home')} />;
     if (currentTab === 'newprofile') return <NewProfilePage goToForm={() => setCurrentTab('form')}/>;
-    if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
-    if (currentTab == 'form') return <Form endForm={() => setCurrentTab('newprofile')}/>;
-    if (currentTab === 'Home') return <HomePage />;
-    if (currentTab == 'contacts') return <Contacts/>;
-    return <Home />;
-
+    if (currentTab === 'home') return <HomePage />;
+    if (currentTab === 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
+    if (currentTab === 'form') return <Form endForm={() => setCurrentTab('newprofile')}/>;
+    if (currentTab === 'contacts') return <Contacts/>;
+    return <HomePage />;
   };
 
   return (
@@ -121,43 +116,14 @@ function App() {
               >
                 <TouchableOpacity
                   style={[styles.navButton]}
-                  onPress={() => setVisible(true)}
+                  onPress={() => setCurrentTab('Home')}
                 >
                   <Image source={require('./pages/images/home_icon.png')}
                   style={[
                     styles.navIcon,
                     styles.navImgSmall,
-                    currentTab === 'chats' && styles.navIconActive
+                    styles.navIconActive
                   ]}/>
-              <Modal
-                  visible={visible}
-                  transparent
-                  animationType="fade"
-                  onRequestClose={() => setVisible(false)}
-                >
-                  <View style={styles.overlay}>
-                    <View style={styles.popup}>
-                      <View style={styles.buttons}>
-                        <TouchableOpacity
-                          style={[styles.buttons, styles.cancel]}
-                          onPress={() => {
-                              setVisible(false);
-                              setCurrentTab('Home');}}
-                        >
-                          <Text style={styles.buttonText}>Home page</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={[styles.buttons, styles.cancel]}
-                          onPress={() => {
-                            setVisible(false);
-                            alert('You just quit the group');
-                          }}>
-                          <Text style={styles.buttonText}>Exit group</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </View>
-                </Modal>
                 </TouchableOpacity>
           <View style={[styles.navButton]}>
               <Text style={[
@@ -211,41 +177,6 @@ const styles = StyleSheet.create({
   },
   navIconActive: {
     color: '#4e8cff',
-  },
-  overlay: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.4)',
-    },
-    popup: {
-      backgroundColor: '#fff',
-      padding: 8,
-      borderRadius: 16,
-      width: '70%',
-      position: 'absolute',
-      top: 70,
-      left: 50,
-      right: 40,
-      alignItems: 'center',
-    },
-  title: {
-    fontSize: 18,
-    marginBottom: 16,
-  },
-  buttons: {
-    flexDirection: 'column',
-    gap: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  cancel: {
-    backgroundColor: Colorsorphy.option_button_grey,
-  },
-  buttonText: {
-    color: Colorsorphy.chat_text_grey ,
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   contactsButton: {
     position: 'absolute',

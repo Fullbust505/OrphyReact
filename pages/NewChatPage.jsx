@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Colorsorphy from '../colors.js';
 import LinearGradient from 'react-native-linear-gradient';
+import HomePage from './HomePage.jsx';
 
 const iceBreakers = [
   "Today, I managed to...",
@@ -40,13 +41,13 @@ function getRandomIndex(length) {
   return Math.floor(Math.random() * length);
 }
 
-const EmptyPage = () => {
+const NewChatPage = ({ goToHome }) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const scrollViewRef = useRef(null);
   const [iceBreaker, setIceBreaker] = useState(() => iceBreakers[getRandomIndex(iceBreakers.length)]);
-
+  
   useEffect(() => {
     // Set a new random ice breaker every minute
     const interval = setInterval(() => {
@@ -267,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmptyPage;
+export default NewChatPage;
