@@ -1,13 +1,12 @@
+import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
 
-export default function WelcomeScreen() {
-    const router = useRouter();
+export default function WelcomeScreen({ goToForm }) {
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Bienvenue sur Orphy 💙</Text>
-            <Button title="Commencer l'aventure" onPress={() => router.push('/onboarding/form')} />
+            <Button title="Commencer l'aventure" onPress={goToForm} />
         </View>
     );
 }

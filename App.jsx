@@ -1,13 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, {useState, useEffect} from 'react';
-import { getAuth, signInAnonymously } from '@react-native-firebase/auth';
-import firebase from '@react-native-firebase/app';
 import {
   StatusBar,
   StyleSheet,
@@ -18,38 +9,53 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { database, set, ref } from './firebase';
+import auth from '@react-native-firebase/auth';
+
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import ChatPage from './pages/ChatPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
+import ProfilePage from './pages/Profile/ProfilePage.jsx';
 import EmptyPage from './pages/EmptyPage.jsx';
+import Welcome from './pages/Onboarding/Welcome.jsx';
+import Form from './pages/Onboarding/Form.jsx';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  const [currentTab, setCurrentTab] = useState('chats');
-
-  /* AUTH HOOK */
-  useEffect(() => {
-    const userLoginAnon = async () => {
-      try {
-        const auth = getAuth();
-        const userInfo = await signInAnonymously(auth);
-        console.log("my uid : ", userInfo.user.uid);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    userLoginAnon();
-  }, []);
-
-  
   const backgroundStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [currentTab, setCurrentTab] = useState('chats');
+
+  useEffect(() => {
+    const createOrCheckUser = async () => {
+      try {
+        // Sign in anonymously and get the real Firebase UID
+        const userCredential = await auth().signInAnonymously();
+        const user = userCredential.user;
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid);
+        // Check if user already exists in the database
+        const snapshot = await import('./firebase').then(m => m.get(userRef));
+        if (snapshot.exists()) {
+          console.log('User already exists in Firebase, uid:', uid);
+        } else {
+          await set(userRef, profile);
+          setCurrentTab('welcome');
+          console.log('User created in Firebase, uid:', uid);
+        }
+      } catch (error) {
+        console.log('Auth error:', error);
+      }
+    };
+    createOrCheckUser();
+  }, []);
 
   const renderScreen = () => {
     if (currentTab === 'chats') return <ChatPage />;
     if (currentTab === 'profile') return <ProfilePage />;
+    if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
+    if (currentTab == 'form') return <Form endForm={() => setCurrentTab('profile')}/>;
     return <EmptyPage />;
   };
 

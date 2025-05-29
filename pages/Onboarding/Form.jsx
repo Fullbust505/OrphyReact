@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import { database, ref, set } from '../../firebase';
+import auth from '@react-native-firebase/auth';
 
 const getRandomPseudo = () => {
     const animals = ['Panda', 'Koala', 'Tigre', 'Loup', 'Dauphin'];
@@ -9,21 +10,30 @@ const getRandomPseudo = () => {
     return `${animal}${num}`;
 };
 
-export default function ProfileForm() {
+export default function ProfileForm( { endForm } ) {
     const [step, setStep] = useState(0);
     const [age, setAge] = useState('');
     const [city, setCity] = useState('');
     const [language, setLanguage] = useState('');
     const [role, setRole] = useState('');
-    const router = useRouter();
 
     const nextStep = () => setStep((prev) => prev + 1);
 
-    const submit = () => {
+    const submit = async () => {
         const pseudo = getRandomPseudo();
         const profile = { pseudo, age, city, language, role };
-        Alert.alert('Profil créé', `Bienvenue ${pseudo} !`);
-        router.replace({ pathname: '/profile', params: profile });
+        try {
+            const user = auth().currentUser;
+            if (!user) {
+                Alert.alert('Erreur', 'Utilisateur non authentifié.');
+                return;
+            }
+            await set(ref(database, 'users/' + user.uid), profile);
+            Alert.alert('Profil créé', `Bienvenue ${pseudo} !`);
+        } catch (error) {
+            Alert.alert('Erreur', 'Impossible d\'enregistrer le profil.');
+        }
+        endForm(); 
     };
 
     const totalSteps = 4;
