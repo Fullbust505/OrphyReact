@@ -22,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import HomePage from './pages/HomePage.jsx';
 
 import ProfilePage from './pages/Profile/ProfilePage.jsx';
-import EmptyPage from './pages/EmptyPage.jsx';
+import EmptyPage from './pages/NewChatPage.jsx';
 import Welcome from './pages/Onboarding/Welcome.jsx';
 import Form from './pages/Onboarding/Form.jsx';
 import Contacts from './pages/Contacts.jsx';
@@ -33,11 +33,11 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [currentTab, setCurrentTab] = useState('Home');
   const [visible, setVisible] = useState(false);
+  
   const backgroundStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
-  const [currentTab, setCurrentTab] = useState('chats');
 
   useEffect(() => {
     const createOrCheckUser = async () => {
@@ -88,9 +88,9 @@ function App() {
   const renderScreen = () => {
     if (currentTab === 'chats') return <ChatPage />;
     if (currentTab === 'profile') return <ProfilePage goToForm={() => setCurrentTab('form')} />;
-    if (currentTab === 'newprofile') return <NewProfilePage />;
+    if (currentTab === 'newprofile') return <NewProfilePage goToForm={() => setCurrentTab('form')}/>;
     if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
-    if (currentTab == 'form') return <Form endForm={() => setCurrentTab('profile')}/>;
+    if (currentTab == 'form') return <Form endForm={() => setCurrentTab('newprofile')}/>;
     if (currentTab === 'Home') return <HomePage />;
     if (currentTab == 'contacts') return <Contacts/>;
     return <Home />;
@@ -103,7 +103,7 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      {/* Contacts Button - always visible, top right */}
+      {/* Contacts Button - always visible, bottom right */}
       <TouchableOpacity
         style={styles.contactsButton}
         onPress={() => setCurrentTab('contacts')}
@@ -123,10 +123,10 @@ function App() {
                   style={[styles.navButton]}
                   onPress={() => setVisible(true)}
                 >
-                  <Image source={require('./pages/images/Barres.png')}
+                  <Image source={require('./pages/images/home_icon.png')}
                   style={[
                     styles.navIcon,
-                    styles.navImg,
+                    styles.navImgSmall,
                     currentTab === 'chats' && styles.navIconActive
                   ]}/>
               <Modal
@@ -164,12 +164,12 @@ function App() {
                     styles.navIcon,
                   ]}>Group</Text>
               </View>
-          <TouchableOpacity style={styles.navButton} onPress={() => setCurrentTab('profile')}>
+          <TouchableOpacity style={styles.navButton} onPress={() => setCurrentTab('newprofile')}>
             <Image source={require('./pages/images/Profil.png')}
             style={[
               styles.navIcon,
               styles.navImg,
-              currentTab === 'profile' && styles.navIconActive
+              currentTab === 'newprofile' && styles.navIconActive
             ]}/>
           </TouchableOpacity>
         </LinearGradient>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 56,
     borderTopWidth: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     paddingHorizontal: 24,
     position: 'absolute',
     left: 0,
@@ -204,6 +204,10 @@ const styles = StyleSheet.create({
   },
   navImg:{
       width: 50, height: 50
+  },
+  navImgSmall: {
+    width: 32,
+    height: 32,
   },
   navIconActive: {
     color: '#4e8cff',
@@ -245,7 +249,7 @@ const styles = StyleSheet.create({
   },
   contactsButton: {
     position: 'absolute',
-    top: 16,
+    bottom: 70,
     right: 20,
     zIndex: 100,
     backgroundColor: '#fff',

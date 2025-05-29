@@ -73,15 +73,9 @@ const ChatPage = ({ groupId = "default-group" }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={80}
     >
-      <View style={[
-        styles.icebreakerContainer,
-        {backgroundColor: isDarkMode ? '#263238' : '#e0f7fa'}
-      ]}>
-        <Text style={[
-          styles.icebreakerText,
-          {color: isDarkMode ? '#b2ebf2' : '#00796b'}
-        ]}>
-          💬 Ice Breaker : {iceBreaker}
+      <View style={styles.icebreakerContainer}>
+        <Text style={styles.icebreakerText}>
+          {iceBreaker ? `💬 Ice Breaker : ${iceBreaker}` : '💬 Ice Breaker : ...'}
         </Text>
       </View>
       <ScrollView
@@ -114,15 +108,21 @@ const ChatPage = ({ groupId = "default-group" }) => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   icebreakerContainer: {
     padding: 15,
     borderRadius: 10,
     margin: 16,
+    marginTop: 50,
     marginBottom: 0,
+    backgroundColor: '#e0f7fa',
+    alignSelf: 'stretch',
   },
   icebreakerText: {
     fontSize: 18,
+    color: '#00796b',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   messagesContainer: {
     flex: 1,

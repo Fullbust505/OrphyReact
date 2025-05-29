@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,48 @@ import {
 import Colorsorphy from '../colors.js';
 import LinearGradient from 'react-native-linear-gradient';
 
+const iceBreakers = [
+  "Today, I managed to...",
+  "In one word, how do you feel right now?",
+  "If your mood were a weather, what would it be?",
+  "What made you smile recently?",
+  "One thing I wish people understood about me...",
+  "What I do when things aren't going so well is...",
+  "Which song best describes your mood this week?",
+  "Complete the sentence: I feel most like myself when...",
+  "If you had a superpower for one day, what would it be and why?",
+  "Your current mood in one emoji?",
+  "If you were a character from a movie or series, who would you be?",
+  "Are you more of a 'pull an all-nighter' or 'wake up at 6am' person?",
+  "Which song describes your state of mind today?",
+  "If you could tell everyone one truth without consequence, what would it be?",
+  "You receive 1000€ now, but you have to spend it in 1 hour. What do you do?",
+  "You're stuck in an elevator with a celebrity... who do you choose?",
+  "You have one thing to say to the whole world, just once. What do you say?",
+  "Share a weird dream you had recently.",
+  "An irrational fear you have (or had as a child)?",
+  "Finish the sentence: 'Nobody knows, but...'"
+];
+
+function getRandomIndex(length) {
+  return Math.floor(Math.random() * length);
+}
+
 const EmptyPage = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const scrollViewRef = useRef(null);
+  const [iceBreaker, setIceBreaker] = useState(() => iceBreakers[getRandomIndex(iceBreakers.length)]);
+
+  useEffect(() => {
+    // Set a new random ice breaker every minute
+    const interval = setInterval(() => {
+      setIceBreaker(iceBreakers[getRandomIndex(iceBreakers.length)]);
+    }, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+  
 
   const handleSend = () => {
     if (input.trim().length === 0) return;
@@ -46,6 +83,11 @@ const EmptyPage = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={80}
     >
+      <View style={styles.icebreakerContainer}>
+        <Text style={styles.icebreakerText}>
+          {iceBreaker ? `💬 Ice Breaker : ${iceBreaker}` : '💬 Ice Breaker : ...'}
+        </Text>
+      </View>
       <ScrollView
         style={styles.messagesContainer}
         contentContainerStyle={{ padding: 16, paddingBottom: 50, paddingTop: 65}}
@@ -107,6 +149,21 @@ const EmptyPage = () => {
 };
 
 const styles = StyleSheet.create({
+  icebreakerContainer: {
+    padding: 15,
+    borderRadius: 10,
+    margin: 16,
+    marginTop: 50,
+    marginBottom: 0,
+    backgroundColor: '#e0f7fa',
+    alignSelf: 'stretch',
+  },
+  icebreakerText: {
+    fontSize: 18,
+    color: '#00796b',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },  
   header: {
     height: 65,
     flexDirection: 'row',

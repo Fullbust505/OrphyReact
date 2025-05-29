@@ -1,9 +1,37 @@
 import React from 'react';
-import {View, Text, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, ImageBackground,Image, Modal} from 'react-native';
+import {View, Text, StyleSheet, useColorScheme, TouchableOpacity, ScrollView, ImageBackground,Image, Modal, Button} from 'react-native';
 import Colorsorphy from '../colors.js';
+import { useEffect, useState } from 'react';
+import { database, ref, get } from '../firebase';
+import auth from '@react-native-firebase/auth';
 
-const ProfilePage = () => {
+    
+
+const ProfilePage = ({ goToForm }) => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const user = auth().currentUser;
+            if (!user) return;
+            const userRef = ref(database, 'users/' + user.uid);
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                setProfile(snapshot.val());
+            }
+        };
+        fetchProfile();
+    }, []);
+
+    // For now, fallback to dummy data if profile is null
+    const pseudo = profile?.pseudo || 'Pseudo';
+    const age = profile?.age || 'Age';
+    const city = profile?.city || 'Ville';
+    const language = profile?.language || 'Langue';
+    const role = profile?.role || 'Rôle';
+
   return (
     <View style={styles.container}>
           <ImageBackground
@@ -20,13 +48,24 @@ const ProfilePage = () => {
               <View style={styles.row}>
                 <View style={styles.avatar} />
                 <View style={styles.info}>
-                  <Text style={styles.text}><Text style={styles.label}>Name :</Text> Poisson Steve</Text>
-                  <Text style={styles.text}><Text style={styles.label}>Age :</Text> 1 years old</Text>
+                  <Text style={styles.text}><Text style={styles.label}>Name :</Text> {pseudo}</Text>
+                  <Text style={styles.text}><Text style={styles.label}>Age :</Text> {age} years old</Text>
                 </View>
               </View>
               <Text style={[styles.text, { marginTop: 8 }]}>
-                <Text style={styles.label}>Country :</Text> French
+                <Text style={styles.label}>City :</Text> {city}
               </Text>
+              <Text style={styles.text}>
+                <Text style={styles.label}>Language(s) spoken :</Text> {language}
+              </Text>
+              <Text style={styles.text}>
+                <Text style={styles.label}>Role :</Text> {role}
+              </Text>
+            
+            </View>
+
+            <View style={{ marginTop: 40, marginLeft: 60, marginRight: 60 }}>
+                <Button title="Modify my profil" onPress={() => goToForm && goToForm()} />
             </View>
     </View>
   );

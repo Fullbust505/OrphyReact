@@ -9,7 +9,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import Colorsorphy from '../colors.js';
-import EmptyPage from './EmptyPage.jsx';
+import EmptyPage from './NewChatPage.jsx';
 import ChatPage from './ChatPage.jsx';
 
 const HomePage = () => {
