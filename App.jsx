@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -7,27 +7,60 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Image,
   Modal,
+  Image
 } from 'react-native';
+
+import { database, set, ref } from './firebase';
+import auth from '@react-native-firebase/auth';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import ChatPage from './pages/ChatPage.jsx';
 import NewProfilePage from './pages/NewProfilePage.jsx';
-import EmptyPage from './pages/EmptyPage.jsx';
 import Colorsorphy from './colors.js';
 import LinearGradient from 'react-native-linear-gradient';
 import HomePage from './pages/HomePage.jsx';
 
+import ProfilePage from './pages/Profile/ProfilePage.jsx';
+import EmptyPage from './pages/EmptyPage.jsx';
+import Welcome from './pages/Onboarding/Welcome.jsx';
+import Form from './pages/Onboarding/Form.jsx';
+import Contacts from './pages/Contacts.jsx';
+
+
+  
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [currentTab, setCurrentTab] = useState('Home');
   const [visible, setVisible] = useState(false);
-
   const backgroundStyle = {
     flex: 1,
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+  const [currentTab, setCurrentTab] = useState('chats');
+
+  useEffect(() => {
+    const createOrCheckUser = async () => {
+      try {
+        // Sign in anonymously and get the real Firebase UID
+        const userCredential = await auth().signInAnonymously();
+        const user = userCredential.user;
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid);
+        // Check if user already exists in the database
+        const snapshot = await import('./firebase').then(m => m.get(userRef));
+        if (snapshot.exists()) {
+          console.log('User already exists in Firebase, uid:', uid);
+        } else {
+          setCurrentTab('welcome');
+          console.log('User created in Firebase, uid:', uid);
+        }
+      } catch (error) {
+        console.log('Auth error:', error);
+      }
+    };
+    createOrCheckUser();
+  }, []);
 
   useEffect(() => {
     const createOrCheckUser = async () => {
@@ -61,6 +94,7 @@ function App() {
     if (currentTab === 'Home') return <HomePage />;
     if (currentTab == 'contacts') return <Contacts/>;
     return <Home />;
+
   };
 
   return (
@@ -69,6 +103,16 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      {/* Contacts Button - always visible, top right */}
+      <TouchableOpacity
+        style={styles.contactsButton}
+        onPress={() => setCurrentTab('contacts')}
+      >
+        <Image
+          source={{ uri: 'https://img.icons8.com/ios-filled/50/007AFF/phone.png' }}
+          style={{ width: 28, height: 28 }}
+        />
+      </TouchableOpacity>
       <View style={{flex: 1}}>
         {renderScreen()}
         <LinearGradient
@@ -199,6 +243,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  contactsButton: {
+    position: 'absolute',
+    top: 16,
+    right: 20,
+    zIndex: 100,
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    padding: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  }
 });
 
 export default App;

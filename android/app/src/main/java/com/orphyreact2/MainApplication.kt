@@ -1,4 +1,4 @@
-package com.orphyreact2
+package com.fullbust.orphy
 
 import android.app.Application
 import com.facebook.react.PackageList
