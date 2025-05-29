@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, {useState} from 'react';
 import {
   StatusBar,
@@ -20,7 +13,7 @@ import {
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import ChatPage from './pages/ChatPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
+import NewProfilePage from './pages/NewProfilePage.jsx';
 import EmptyPage from './pages/EmptyPage.jsx';
 import Colorsorphy from './colors.js';
 import LinearGradient from 'react-native-linear-gradient';
@@ -36,10 +29,37 @@ function App() {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  useEffect(() => {
+    const createOrCheckUser = async () => {
+      try {
+        // Sign in anonymously and get the real Firebase UID
+        const userCredential = await auth().signInAnonymously();
+        const user = userCredential.user;
+        const uid = user.uid;
+        const userRef = ref(database, 'users/' + uid);
+        // Check if user already exists in the database
+        const snapshot = await import('./firebase').then(m => m.get(userRef));
+        if (snapshot.exists()) {
+          console.log('User already exists in Firebase, uid:', uid);
+        } else {
+          setCurrentTab('welcome');
+          console.log('User created in Firebase, uid:', uid);
+        }
+      } catch (error) {
+        console.log('Auth error:', error);
+      }
+    };
+    createOrCheckUser();
+  }, []);
+
   const renderScreen = () => {
     if (currentTab === 'chats') return <ChatPage />;
-    if (currentTab === 'profile') return <ProfilePage />;
+    if (currentTab === 'profile') return <ProfilePage goToForm={() => setCurrentTab('form')} />;
+    if (currentTab === 'newprofile') return <NewProfilePage />;
+    if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
+    if (currentTab == 'form') return <Form endForm={() => setCurrentTab('profile')}/>;
     if (currentTab === 'Home') return <HomePage />;
+    if (currentTab == 'contacts') return <Contacts/>;
     return <Home />;
   };
 
