@@ -11,6 +11,8 @@ import {
   useColorScheme,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {sendMessageToGroup} from '../SendMsgToGroup.js';
+import { database, ref, onValue } from '../firebase.js';
 
 const iceBreakers = [
   "Aujourd’hui, j’ai réussi à...",
@@ -48,19 +50,33 @@ const ChatPage = ({ groupId = "default-group" }) => {
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    // Set a new random ice breaker every minute
-    const interval = setInterval(() => {
-      setIceBreaker(iceBreakers[getRandomIndex(iceBreakers.length)]);
-    }, 60 * 1000);
-    return () => clearInterval(interval);
+    
+    
+    const messagesRef = ref(database, `groups/2025-06-01/0edefac4-df30-4d7e-88f5-74a55ba2cefd/messages`); // remplace DATE et GROUP_ID dynamiquement
+    const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Trie par timestamp ou clé si timestamp existe, sinon par clé
+        const messagesArray = Object.entries(data)
+          .map(([id, msg]) => ({ id, ...msg }))
+          .sort((a, b) => {
+            if (a.timestamp && b.timestamp) return a.timestamp - b.timestamp;
+            return 0;
+          });
+        setMessages(messagesArray);
+      } else {
+        setMessages([]);
+      }
+    });
+    return () => unsubscribe(); 
   }, []);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim().length === 0) return;
-    setMessages(prev => [
-      ...prev,
-      {id: Date.now(), text: input.trim()}
-    ]);
+    await sendMessageToGroup('0edefac4-df30-4d7e-88f5-74a55ba2cefd', {
+      content: input.trim(),
+      timestamp: Date.now()
+    });
     setInput('');
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({animated: true});
@@ -86,7 +102,7 @@ const ChatPage = ({ groupId = "default-group" }) => {
       >
         {messages.map(msg => (
           <View key={msg.id} style={styles.messageBubble}>
-            <Text style={styles.messageText}>{msg.text}</Text>
+            <Text style={styles.messageText}>{msg.content || msg.text}</Text>
           </View>
         ))}
       </ScrollView>
