@@ -1,6 +1,6 @@
 // filepath: c:\Users\linus\Documents\Working Stuff\Git Hub\EFREI_git\OrphyReact\firebase.js
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, set, get, child, remove } from "firebase/database";
+import { getDatabase, ref, set, get, child, remove, onValue } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB6aOgnrvcG7IPkiKv-CIRG967slbxvL8A',
@@ -15,4 +15,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export { app, database, set, get, child, remove, ref };
+export { app, database, set, get, child, remove, ref, onValue };
