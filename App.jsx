@@ -7,6 +7,7 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
+  Image
 } from 'react-native';
 
 import { database, set, ref } from './firebase';
@@ -18,6 +19,7 @@ import ProfilePage from './pages/Profile/ProfilePage.jsx';
 import EmptyPage from './pages/EmptyPage.jsx';
 import Welcome from './pages/Onboarding/Welcome.jsx';
 import Form from './pages/Onboarding/Form.jsx';
+import Contacts from './pages/Contacts.jsx';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -55,6 +57,7 @@ function App() {
     if (currentTab === 'profile') return <ProfilePage goToForm={() => setCurrentTab('form')} />;
     if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
     if (currentTab == 'form') return <Form endForm={() => setCurrentTab('profile')}/>;
+    if (currentTab == 'contacts') return <Contacts/>;
     return <EmptyPage />;
   };
 
@@ -64,6 +67,16 @@ function App() {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+      {/* Contacts Button - always visible, top right */}
+      <TouchableOpacity
+        style={styles.contactsButton}
+        onPress={() => setCurrentTab('contacts')}
+      >
+        <Image
+          source={{ uri: 'https://img.icons8.com/ios-filled/50/007AFF/phone.png' }}
+          style={{ width: 28, height: 28 }}
+        />
+      </TouchableOpacity>
       <View style={{flex: 1}}>
         {renderScreen()}
         <View style={[
@@ -128,6 +141,20 @@ const styles = StyleSheet.create({
   },
   navIconActive: {
     color: '#4e8cff',
+  },
+  contactsButton: {
+    position: 'absolute',
+    top: 16,
+    right: 20,
+    zIndex: 100,
+    backgroundColor: '#fff',
+    borderRadius: 30,
+    padding: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
 });
 

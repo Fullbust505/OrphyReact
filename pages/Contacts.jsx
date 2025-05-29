@@ -11,12 +11,13 @@ export default function ContactsScreen() {
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.sectionTitle}>🧠 Psychologues</Text>
-            <ContactItem name="Dr. Christelle Leconte" phone="0699139621" />
+            <ContactItem name="Dr. Christelle Leconte" phone="06 99 13 96 21" />
             <ContactItem name="..." phone="...." />
 
             <Text style={styles.sectionTitle}>🏛️ Mairies / Institutions</Text>
-            <ContactItem name="Mairie de Paris" phone="0142744444" />
-            <ContactItem name="..." phone="...." />
+            <ContactItem name="Mairie de Paris" phone="01 42 74 44 44" />
+            <ContactItem name="Advocacy France" phone="06 70 33 55 81" />
+            <ContactItem name="Ariane Paris" phone="06 85 88 61 46" />
 
             <Text style={styles.sectionTitle}>🆘 Urgences</Text>
             <ContactItem name="Samu" phone="15" />
@@ -28,6 +29,8 @@ export default function ContactsScreen() {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        marginBottom: 56,
+        paddingBottom: 20,
         backgroundColor: '#fff',
         flex: 1,
     },
