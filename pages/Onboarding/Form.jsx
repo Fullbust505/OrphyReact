@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { database, ref, set } from '../../firebase';
+import { database, ref, set, get } from '../../firebase';
 import auth from '@react-native-firebase/auth';
 
 const getRandomPseudo = () => {
@@ -19,16 +19,26 @@ export default function ProfileForm( { endForm } ) {
 
     const nextStep = () => setStep((prev) => prev + 1);
 
-    const submit = async () => {
+    const submit = async (selectedRole) => {
         const pseudo = getRandomPseudo();
-        const profile = { pseudo, age, city, language, role };
+        const profile = { pseudo, age, city, language, role: selectedRole ?? role };
         try {
             const user = auth().currentUser;
             if (!user) {
                 Alert.alert('Erreur', 'Utilisateur non authentifié.');
                 return;
             }
-            await set(ref(database, 'users/' + user.uid), profile);
+            // Check if user already exists in the database
+            const userRef = ref(database, 'users/' + user.uid);
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                // Update the existing user profile with new info
+                await set(userRef, profile);
+                Alert.alert('Profil mis à jour', `Votre profil a été mis à jour !`);
+                endForm();
+                return;
+            }
+            await set(userRef, profile);
             Alert.alert('Profil créé', `Bienvenue ${pseudo} !`);
         } catch (error) {
             Alert.alert('Erreur', 'Impossible d\'enregistrer le profil.');
@@ -46,28 +56,28 @@ export default function ProfileForm( { endForm } ) {
                 <>
                     <Text style={styles.label}>Quel est votre âge ?</Text>
                     <TextInput style={styles.input} keyboardType="numeric" value={age} onChangeText={setAge} />
-                    <Button title="Suivant" onPress={nextStep} />
+                    <Button title="Suivant" onPress={() => setTimeout(nextStep, 0)} />
                 </>
             )}
             {step === 1 && (
                 <>
                     <Text style={styles.label}>Votre ville de résidence</Text>
                     <TextInput style={styles.input} value={city} onChangeText={setCity} />
-                    <Button title="Suivant" onPress={nextStep} />
+                    <Button title="Suivant" onPress={() => setTimeout(nextStep, 0)} />
                 </>
             )}
             {step === 2 && (
                 <>
                     <Text style={styles.label}>Langue(s) parlée(s)</Text>
                     <TextInput style={styles.input} value={language} onChangeText={setLanguage} />
-                    <Button title="Suivant" onPress={nextStep} />
+                    <Button title="Suivant" onPress={() => setTimeout(nextStep, 0)} />
                 </>
             )}
             {step === 3 && (
                 <>
                     <Text style={styles.label}>Souhaitez-vous :</Text>
-                    <Button title="Être aidé" onPress={() => { setRole('Être aidé'); submit(); }} />
-                    <Button title="Être à l'écoute" onPress={() => { setRole('Être à l\'écoute'); submit(); }} />
+                    <Button title="Être aidé" onPress={() => submit('Être aidé')} />
+                    <Button title="Être à l'écoute" onPress={() => submit("Être à l'écoute")} />
                 </>
             )}
         </View>

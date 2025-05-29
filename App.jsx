@@ -40,7 +40,6 @@ function App() {
         if (snapshot.exists()) {
           console.log('User already exists in Firebase, uid:', uid);
         } else {
-          await set(userRef, profile);
           setCurrentTab('welcome');
           console.log('User created in Firebase, uid:', uid);
         }
@@ -53,7 +52,7 @@ function App() {
 
   const renderScreen = () => {
     if (currentTab === 'chats') return <ChatPage />;
-    if (currentTab === 'profile') return <ProfilePage />;
+    if (currentTab === 'profile') return <ProfilePage goToForm={() => setCurrentTab('form')} />;
     if (currentTab == 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;
     if (currentTab == 'form') return <Form endForm={() => setCurrentTab('profile')}/>;
     return <EmptyPage />;

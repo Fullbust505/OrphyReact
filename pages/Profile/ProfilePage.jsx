@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { useEffect, useState } from 'react';
 import { database, ref, get } from '../../firebase';
 import auth from '@react-native-firebase/auth';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ goToForm }) {
     const [profile, setProfile] = useState(null);
 
     useEffect(() => {
@@ -50,6 +50,10 @@ export default function ProfileScreen() {
                     </Text>
                 ))}
                 <Text style={{ marginLeft: 8, fontSize: 16 }}>(4.0)</Text>
+            </View>
+            {/* Add navigation button to onboarding form */}
+            <View style={{ marginTop: 40 }}>
+                <Button title="Modifier mon profil" onPress={() => goToForm && goToForm()} />
             </View>
         </View>
     );
