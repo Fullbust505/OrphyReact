@@ -14,7 +14,7 @@ import { database, set, ref } from './firebase';
 import auth from '@react-native-firebase/auth';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import NewChatPage from './pages/NewChatPage.jsx';
+import ChatPage from './pages/ChatPage.jsx';
 import NewProfilePage from './pages/NewProfilePage.jsx';
 import Colorsorphy from './colors.js';
 import LinearGradient from 'react-native-linear-gradient';
@@ -83,7 +83,7 @@ function App() {
   }, []);
 
   const renderScreen = () => {
-    if (currentTab === 'chats') return <NewChatPage goToHome={() => setCurrentTab('home')} />;
+    if (currentTab === 'chats') return <ChatPage goToHome={() => setCurrentTab('home')} />;
     if (currentTab === 'newprofile') return <NewProfilePage goToForm={() => setCurrentTab('form')}/>;
     if (currentTab === 'home') return <HomePage />;
     if (currentTab === 'welcome') return <Welcome goToForm={() => setCurrentTab('form')} />;

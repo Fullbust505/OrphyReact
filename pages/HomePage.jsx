@@ -9,13 +9,13 @@ import {
   ImageBackground,
 } from 'react-native';
 import Colorsorphy from '../colors.js';
-import NewChatPage from './NewChatPage.jsx';
+import ChatPage from './ChatPage.jsx';
 
 const HomePage = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const [currentTab, setCurrentTab] = useState('home');
   
-  if (currentTab === 'chats') return <NewChatPage/>;
+  if (currentTab === 'chats') return <ChatPage />;
 
   return (
     <View style={styles.container}>
