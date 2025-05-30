@@ -15,27 +15,26 @@ import {sendMessageToGroup} from '../SendMsgToGroup.js';
 import { database, ref, onValue } from '../firebase.js';
 
 const iceBreakers = [
-  "Aujourd’hui, j’ai réussi à...",
-  "En un mot, comment tu te sens en ce moment ?",
-  "Si ton humeur était une météo, ce serait quoi ?",
-  "Qu’est-ce qui t’a fait sourire récemment ?",
-  "Une chose que j’aimerais que les gens comprennent sur moi...",
-  "Ce que je fais quand ça ne va pas trop bien, c’est...",
-  "Quelle chanson décrit bien ton humeur cette semaine ?",
-  "Complète la phrase : je me sens le plus moi-même quand…",
-  "Si tu avais un superpouvoir pour une journée, ce serait quoi et pourquoi ?",
-  "Ton mood actuel en un emoji ?",
-  "Si tu étais un personnage de film ou série, tu serais qui ?",
-  "Plutôt team nuit blanche ou réveil à 6h ?",
-  "Quelle chanson décrit ton état d’esprit aujourd’hui ?",
-  "Quel est ton pet peeve (truc qui t’énerve sans raison valable) ?",
-  "Si tu pouvais dire une vérité à tout le monde sans conséquence, ce serait quoi ?",
-  "Tu reçois 1000€ maintenant, mais tu dois le dépenser en 1h. Tu fais quoi ?",
-  "T’es bloqué dans un ascenseur avec une célébrité… qui tu choisis ?",
-  "T’as un mot à dire au monde entier, une seule fois. Qu’est-ce que tu dis ?",
-  "Partage un rêve chelou que t’as fait récemment.",
-  "Une peur irrationnelle que t’as (ou que t’avais enfant) ?",
-  "Termine la phrase : ‘Personne ne le sait, mais…’"
+  "Today, I managed to...",
+  "In one word, how do you feel right now?",
+  "If your mood were a weather, what would it be?",
+  "What made you smile recently?",
+  "One thing I wish people understood about me...",
+  "What I do when things aren't going so well is...",
+  "Which song best describes your mood this week?",
+  "Complete the sentence: I feel most like myself when...",
+  "If you had a superpower for one day, what would it be and why?",
+  "Your current mood in one emoji?",
+  "If you were a character from a movie or series, who would you be?",
+  "Are you more of a 'pull an all-nighter' or 'wake up at 6am' person?",
+  "Which song describes your state of mind today?",
+  "If you could tell everyone one truth without consequence, what would it be?",
+  "You receive 1000€ now, but you have to spend it in 1 hour. What do you do?",
+  "You're stuck in an elevator with a celebrity... who do you choose?",
+  "You have one thing to say to the whole world, just once. What do you say?",
+  "Share a weird dream you had recently.",
+  "An irrational fear you have (or had as a child)?",
+  "Finish the sentence: 'Nobody knows, but...'"
 ];
 
 function getRandomIndex(length) {
@@ -73,7 +72,7 @@ const ChatPage = ({ groupId = "default-group" }) => {
 
   const handleSend = async () => {
     if (input.trim().length === 0) return;
-    await sendMessageToGroup('0edefac4-df30-4d7e-88f5-74a55ba2cefd', {
+    await sendMessageToGroup('0edefac4-df30-4d7e-88f5-74a55ba2cefd', {  // raw group uid
       content: input.trim(),
       timestamp: Date.now()
     });
@@ -167,7 +166,6 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    marginBottom: 56, // move above the bottom bar (height of navBar)
   },
   input: {
     flex: 1,

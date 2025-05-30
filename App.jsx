@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   contactsButton: {
     position: 'absolute',
-    bottom: 70,
+    bottom: 60,
     right: 20,
     zIndex: 100,
     backgroundColor: '#fff',

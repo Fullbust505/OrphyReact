@@ -6,7 +6,7 @@ export default function WelcomeScreen({ goToForm }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Bienvenue sur Orphy 💙</Text>
-            <Button title="Commencer l'aventure" onPress={goToForm} />
+            <Button title="Start the Adventure" onPress={goToForm} />
         </View>
     );
 }
